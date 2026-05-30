@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2 th:text="#{page.addItem}">상품 등록</h2>
+    </div>
+
+    <form action="item.html" th:action th:object="${item}" method="post">
+        <!-- GlobalErrors의 경우, 오류가 여러개일 수 있기 때문에, th:errors 대신, 전체 GlobalErrors를 받아와서 th:each로 반복문으로 출력해야함-->
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+        </div>
+
+        <div>
+            <label for="itemName" th:text="#{label.item.itemName}">상품명</label>
+            <input type="text" id="itemName" th:field="*{itemName}" th:errorclass="field-error" class="form-control" placeholder="이름을 입력하세요">
+            <!-- th:errors="*{itemName}" 안에 th:if="${#fields.hasErrors('itemName')}" 의 확인 로직이 포함되어 있음 -->
+            <div class="field-error" th:errors="*{itemName}">
+                상품명 오류
+            </div>
+        </div>
+        <div>
+            <label for="price" th:text="#{label.item.price}">가격</label>
+            <input type="text" id="price" th:field="*{price}" th:errorclass="field-error" class="form-control" placeholder="가격을 입력하세요">
+            <div class="field-error" th:errors="*{price}">
+                가격 오류
+            </div>
+        </div>
+        <div>
+            <label for="quantity" th:text="#{label.item.quantity}">수량</label>
+            <input type="text" id="quantity" th:field="*{quantity}" th:errorclass="field-error" class="form-control" placeholder="수량을 입력하세요">
+            <div class="field-error" th:errors="*{quantity}">
+                수량 오류
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.save}">저장</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/validation/v2/items}'|"
+                        type="button" th:text="#{button.cancel}">취소</button>
+            </div>
+        </div>
+
+    </form>
+
+</div> <!-- /container -->
+</body>
+</html>
