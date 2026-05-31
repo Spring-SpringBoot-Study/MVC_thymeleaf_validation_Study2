@@ -232,6 +232,8 @@ public class ValidationItemControllerV2 {
             bindingResult.rejectValue("itemName", "required");
         }
 
+        // ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required"); // 위의 코드와 동일한 기능
+
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
             // bindingResult.addError(new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, "default 오류 메시지"));
             bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
