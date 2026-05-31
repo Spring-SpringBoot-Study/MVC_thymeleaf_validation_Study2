@@ -25,6 +25,8 @@ public class ValidationItemControllerV2 {
 
     private final ItemRepository itemRepository;
 
+    private final ItemValidator itemValidator;
+
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
@@ -214,7 +216,7 @@ public class ValidationItemControllerV2 {
         return "redirect:/validation/v2/items/{itemId}";
     }
 
-    @PostMapping("/add")
+    // @PostMapping("/add")
     public String addItemV4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
         // BindingResult는 ModelAttribute인 Item 객체의 바인딩 결과를 담고 있기 때문에, 무조건 @ModelAttribute Item item의 뒤에 와야함
 
@@ -268,6 +270,24 @@ public class ValidationItemControllerV2 {
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
+    @PostMapping("/add")
+    public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        itemValidator.validate(item, bindingResult); // 검증 로직들을 모두 itemValidator가 처리함
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        //성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
         return "redirect:/validation/v2/items/{itemId}";
     }
 
